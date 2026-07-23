@@ -10,26 +10,27 @@
 <style>
 :root{
   --ink:#0F1420; --panel:#171E2E; --panel2:#1C2436; --line:#2A3450;
-  --ring:#FF7A59; --watch:#4EA8DE; --delta:#B497E7;
-  --text:#E8ECF4; --muted:#8A94AB; --good:#5FCE8B;
+  --ca:#FF7A59; --cb:#4EA8DE; --cr:#5FCE8B; --delta:#B497E7;
+  --text:#E8ECF4; --muted:#8A94AB;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--ink);color:var(--text);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1180px;margin:0 auto;padding:28px 22px 80px}
 header{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:6px}
 h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;letter-spacing:-0.5px;margin:0}
-h1 .a{color:var(--ring)} h1 .b{color:var(--watch)}
-.sub{color:var(--muted);font-size:14px;max-width:640px;line-height:1.5;margin:4px 0 26px}
+h1 .a{color:var(--ca)} h1 .b{color:var(--cb)}
+.sub{color:var(--muted);font-size:14px;max-width:720px;line-height:1.5;margin:4px 0 26px}
 .chips{display:flex;gap:10px;margin:0 0 22px;flex-wrap:wrap}
 .chip{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-size:13px;font-weight:500}
 .dot{width:10px;height:10px;border-radius:50%}
-.drop-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px}
-@media(max-width:720px){.drop-row{grid-template-columns:1fr}}
-.drop{border:1.5px dashed var(--line);border-radius:14px;padding:26px 20px;text-align:center;cursor:pointer;transition:border-color .15s, background .15s;background:var(--panel)}
+.drop-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:26px}
+.drop{border:1.5px dashed var(--line);border-radius:14px;padding:24px 18px;text-align:center;cursor:pointer;transition:border-color .15s, background .15s;background:var(--panel)}
 .drop:hover,.drop.over{background:var(--panel2)}
-.drop.a:hover,.drop.a.over{border-color:var(--ring)} .drop.b:hover,.drop.b.over{border-color:var(--watch)}
-.drop.loaded.a{border-style:solid;border-color:var(--ring)}
-.drop.loaded.b{border-style:solid;border-color:var(--watch)}
+.drop.a:hover,.drop.a.over{border-color:var(--ca)} .drop.b:hover,.drop.b.over{border-color:var(--cb)}
+.drop.r:hover,.drop.r.over{border-color:var(--cr)}
+.drop.loaded.a{border-style:solid;border-color:var(--ca)}
+.drop.loaded.b{border-style:solid;border-color:var(--cb)}
+.drop.loaded.r{border-style:solid;border-color:var(--cr)}
 .drop h3{font-family:'Space Grotesk',sans-serif;margin:0 0 4px;font-size:16px}
 .drop p{margin:0;color:var(--muted);font-size:13px}
 .drop input{display:none}
@@ -38,12 +39,15 @@ h1 .a{color:var(--ring)} h1 .b{color:var(--watch)}
 .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 12px}
 .stat .label{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;white-space:nowrap}
 .stat .vals{font-family:'IBM Plex Mono',monospace;font-size:13.5px;line-height:1.65;white-space:nowrap}
-.stat .vals .va{color:var(--ring)} .stat .vals .vb{color:var(--watch)}
-.stat .d{font-size:12px;color:var(--delta);font-family:'IBM Plex Mono',monospace;margin-top:4px}
+.stat .d{font-size:11.5px;color:var(--delta);font-family:'IBM Plex Mono',monospace;margin-top:4px;white-space:nowrap}
 .agree{background:linear-gradient(120deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:30px;display:none}
-.agree h2{font-family:'Space Grotesk',sans-serif;margin:0 0 10px;font-size:18px}
-.agree .row{display:flex;gap:26px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:14px}
-.agree .row div span{display:block;font-family:'IBM Plex Sans',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.agree h2{font-family:'Space Grotesk',sans-serif;margin:0 0 4px;font-size:18px}
+.agree .refnote{color:var(--muted);font-size:12.5px;margin:0 0 12px}
+.pairrow{display:flex;gap:24px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:13.5px;
+  padding:10px 0;border-top:1px solid var(--line);align-items:center}
+.pairrow:first-of-type{border-top:none}
+.pairrow .pname{font-family:'IBM Plex Sans',sans-serif;font-weight:600;min-width:220px;font-size:13.5px}
+.pairrow div span{display:block;font-family:'IBM Plex Sans',sans-serif;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
 section.charts{display:none}
 .chart-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 8px 2px;margin-bottom:20px}
 .chart-card h2{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:500;margin:8px 14px 2px}
@@ -60,42 +64,41 @@ footer{color:var(--muted);font-size:12px;margin-top:40px;line-height:1.6}
 <body>
 <div class="wrap">
 <header><h1>Twin<span class="a">&nbsp;Track</span><span class="b">.</span></h1></header>
-<p class="sub">Drop the same activity exported from two devices as <b>FIT</b> files. Everything is parsed in your browser — nothing is uploaded anywhere. Records are aligned second-by-second and compared across every field both devices share.</p>
+<p class="sub">Drop the same activity exported from two or three devices as <b>FIT</b> files. Everything is parsed in your browser — nothing is uploaded anywhere. Records are aligned second-by-second. If you load a <b>reference</b> (e.g. a chest strap), the two devices are each judged against it; otherwise they're compared to each other.</p>
 
-<div class="chips" id="chips" style="display:none">
-  <div class="chip"><span class="dot" style="background:var(--ring)"></span><span id="nameA">Device A</span></div>
-  <div class="chip"><span class="dot" style="background:var(--watch)"></span><span id="nameB">Device B</span></div>
-</div>
+<div class="chips" id="chips" style="display:none"></div>
 
 <div class="err" id="err"></div>
 
 <div class="drop-row">
   <label class="drop a" id="dropA" tabindex="0"><h3>Device A</h3><p id="pA">Drop a .fit file or click to browse</p><input type="file" id="fileA" accept=".fit,.FIT"></label>
   <label class="drop b" id="dropB" tabindex="0"><h3>Device B</h3><p id="pB">Drop a .fit file or click to browse</p><input type="file" id="fileB" accept=".fit,.FIT"></label>
+  <label class="drop r" id="dropR" tabindex="0"><h3>Reference — optional</h3><p id="pR">e.g. H10 chest strap session</p><input type="file" id="fileR" accept=".fit,.FIT"></label>
 </div>
 
 <div class="statgrid" id="stats"></div>
 
 <div class="agree" id="agree">
   <h2>Heart-rate agreement</h2>
-  <div class="row" id="agreeRow"></div>
+  <p class="refnote" id="refnote"></p>
+  <div id="pairs"></div>
 </div>
 
 <section class="charts" id="charts">
-  <div class="chart-card"><h2>Heart rate</h2><div class="note">Both traces on the aligned one-second grid.</div><div class="plot" id="c_hr"></div></div>
-  <div class="chart-card"><h2>Heart-rate difference</h2><div class="note">Device A minus Device B. Fill colour shows which device reads higher at each moment.</div><div class="plot" id="c_hrdiff"></div></div>
+  <div class="chart-card"><h2>Heart rate</h2><div class="note">All traces on the aligned one-second grid.</div><div class="plot" id="c_hr"></div></div>
+  <div class="chart-card"><h2 id="t_hrdiff">Heart-rate difference</h2><div class="note" id="n_hrdiff"></div><div class="plot" id="c_hrdiff"></div></div>
   <div class="two">
-    <div class="chart-card"><h2>Agreement scatter</h2><div class="note">Each point is one aligned second; the dashed line is perfect agreement.</div><div class="plot" id="c_scatter"></div></div>
-    <div class="chart-card"><h2>Bland–Altman</h2><div class="note">Bias and 95% limits of agreement.</div><div class="plot" id="c_ba"></div></div>
+    <div class="chart-card"><h2>Agreement scatter</h2><div class="note" id="n_scatter"></div><div class="plot" id="c_scatter"></div></div>
+    <div class="chart-card"><h2>Bland–Altman</h2><div class="note">Solid line: bias. Dashed: 95% limits of agreement.</div><div class="plot" id="c_ba"></div></div>
   </div>
   <div class="two">
-    <div class="chart-card"><h2>GPS track overlay</h2><div class="note">Raw recorded positions from each device.</div><div class="plot tall" id="c_gps"></div></div>
-    <div class="chart-card"><h2>GPS separation</h2><div class="note">Great-circle distance between the two recorded positions at each aligned second.</div><div class="plot tall" id="c_gpssep"></div></div>
+    <div class="chart-card"><h2>GPS track overlay</h2><div class="note">Raw recorded positions from each device that has GPS.</div><div class="plot tall" id="c_gps"></div></div>
+    <div class="chart-card"><h2>GPS separation</h2><div class="note" id="n_gpssep"></div><div class="plot tall" id="c_gpssep"></div></div>
   </div>
   <div class="chart-card"><h2>Elevation</h2><div class="plot" id="c_alt"></div></div>
   <div class="chart-card"><h2>Cumulative distance</h2><div class="plot" id="c_dist"></div></div>
   <div class="chart-card"><h2>Cadence</h2><div class="note">30-second rolling average.</div><div class="plot" id="c_cad"></div></div>
-  <div class="chart-card"><h2>Speed</h2><div class="note">30-second rolling average. If a device doesn't record speed, it is derived from its distance channel.</div><div class="plot" id="c_spd"></div></div>
+  <div class="chart-card"><h2>Speed</h2><div class="note">30-second rolling average. Derived from the distance channel when not recorded.</div><div class="plot" id="c_spd"></div></div>
 </section>
 
 <footer>Charts are interactive — drag to zoom, double-click to reset, camera icon to export PNG. Reload the page to start a new comparison.</footer>
@@ -198,7 +201,6 @@ function parseFit(buf){
     else if(global===18){ Object.assign(session,out); }
     else if(global===0){ Object.assign(fileId,out); }
   }
-  // semicircles -> degrees
   for(const r of records){ if(r.lat!=null){r.lat*= 180/2147483648;} if(r.lon!=null){r.lon*= 180/2147483648;} }
   return {records, session, fileId};
 }
@@ -210,7 +212,6 @@ function toSecondMap(records){
   return m;
 }
 function interp(map, keys, field, maxGap=10){
-  // linear interpolation over integer-second keys, gaps > maxGap left null
   const ks=[...map.keys()].sort((a,b)=>a-b).filter(k=>map.get(k)[field]!=null);
   const out=new Array(keys.length).fill(null);
   if(!ks.length) return out;
@@ -243,10 +244,29 @@ function hav(lat1,lon1,lat2,lon2){
   const a=Math.sin(dp/2)**2+Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dl/2)**2;
   return 2*R*Math.asin(Math.sqrt(a));
 }
+function pairStats(x, y){ // arrays aligned, nulls allowed
+  const px=[], py=[];
+  for(let i=0;i<x.length;i++) if(x[i]!=null&&y[i]!=null){px.push(x[i]);py.push(y[i]);}
+  if(px.length<10) return null;
+  const n=px.length, mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+  const diffs=px.map((v,i)=>v-py[i]);
+  const bias=mean(diffs), mae=mean(diffs.map(Math.abs)), rmse=Math.sqrt(mean(diffs.map(d=>d*d)));
+  const sd=Math.sqrt(mean(diffs.map(d=>(d-bias)**2)));
+  const mx=mean(px), my=mean(py);
+  let num=0,dx=0,dy=0;
+  for(let i=0;i<n;i++){num+=(px[i]-mx)*(py[i]-my);dx+=(px[i]-mx)**2;dy+=(py[i]-my)**2;}
+  const r=(dx>0&&dy>0)? num/Math.sqrt(dx*dy) : NaN;
+  const w5=diffs.filter(d=>Math.abs(d)<=5).length/n*100;
+  const w10=diffs.filter(d=>Math.abs(d)<=10).length/n*100;
+  return {n,bias,mae,rmse,sd,r,w5,w10,px,py,diffs};
+}
 
 /* ---------------- UI & plotting ---------------- */
-const COL={a:'#FF7A59',b:'#4EA8DE',delta:'#B497E7',muted:'#8A94AB',grid:'#2A3450',text:'#E8ECF4'};
-const files={a:null,b:null};
+const SLOTS=['a','b','r'];
+const SLOT_COLOR={a:'#FF7A59',b:'#4EA8DE',r:'#5FCE8B'};
+const SLOT_FALLBACK={a:'Device A',b:'Device B',r:'Reference'};
+const COL={delta:'#B497E7',muted:'#8A94AB',grid:'#2A3450',text:'#E8ECF4'};
+const files={a:null,b:null,r:null};
 const LO=(xa={},ya={})=>({paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
   font:{family:'IBM Plex Sans',color:COL.text,size:12},
   margin:{l:55,r:16,t:10,b:40},legend:{orientation:'h',y:1.12},
@@ -262,18 +282,19 @@ function deviceName(parsed, fallback){
 function fmtDur(s){ if(s==null)return '—'; s=Math.round(s); return Math.floor(s/3600)+'h '+String(Math.floor(s%3600/60)).padStart(2,'0')+'m'; }
 function showErr(msg){ const e=document.getElementById('err'); e.textContent=msg; e.style.display='block'; }
 
-for(const side of ['a','b']){
-  const drop=document.getElementById('drop'+side.toUpperCase());
-  const input=document.getElementById('file'+side.toUpperCase());
+for(const slot of SLOTS){
+  const S=slot.toUpperCase();
+  const drop=document.getElementById('drop'+S);
+  const input=document.getElementById('file'+S);
   const handle=async file=>{
     try{
       const buf=await file.arrayBuffer();
-      files[side]=parseFit(buf);
-      files[side]._filename=file.name;
+      files[slot]=parseFit(buf);
+      files[slot]._filename=file.name;
       drop.classList.add('loaded');
-      document.getElementById('p'+side.toUpperCase()).textContent=file.name+' — '+files[side].records.length+' records';
+      document.getElementById('p'+S).textContent=file.name+' — '+files[slot].records.length+' records';
       document.getElementById('err').style.display='none';
-      if(files.a&&files.b) analyze();
+      if(SLOTS.filter(s=>files[s]).length>=2) analyze();
     }catch(err){ showErr('Could not read '+file.name+': '+err.message); }
   };
   input.addEventListener('change',e=>{ if(e.target.files[0]) handle(e.target.files[0]); });
@@ -284,144 +305,182 @@ for(const side of ['a','b']){
 }
 
 function analyze(){
-  const A=files.a, B=files.b;
-  const nameA=deviceName(A,'Device A'), nameB=deviceName(B,'Device B');
-  document.getElementById('nameA').textContent=nameA;
-  document.getElementById('nameB').textContent=nameB;
-  document.getElementById('chips').style.display='flex';
+  const loaded=SLOTS.filter(s=>files[s]);
+  // devices in display order; reference last so it draws on top-ish in legends
+  const devs=loaded.map(s=>({slot:s,color:SLOT_COLOR[s],parsed:files[s],
+    name:deviceName(files[s],SLOT_FALLBACK[s])}));
+  // dedupe names
+  const seen={};
+  for(const d of devs){ if(seen[d.name]){d.name+=' ('+d.slot.toUpperCase()+')';} seen[d.name]=1; }
+  const refDev = devs.find(d=>d.slot==='r') || devs.find(d=>d.slot==='b');
+  const nonRef = devs.filter(d=>d!==refDev);
+  const hasTrueRef = !!files.r;
 
-  const mA=toSecondMap(A.records), mB=toSecondMap(B.records);
-  const t0=Math.max(Math.min(...mA.keys()),Math.min(...mB.keys()));
-  const t1=Math.min(Math.max(...mA.keys()),Math.max(...mB.keys()));
-  if(t1<=t0){ showErr('These two files do not overlap in time — are they the same activity?'); return; }
+  document.getElementById('chips').style.display='flex';
+  document.getElementById('chips').innerHTML=devs.map(d=>
+    `<div class="chip"><span class="dot" style="background:${d.color}"></span>${d.name}${d.slot==='r'?' · reference':''}</div>`).join('');
+
+  for(const d of devs) d.map=toSecondMap(d.parsed.records);
+  const t0=Math.max(...devs.map(d=>Math.min(...d.map.keys())));
+  const t1=Math.min(...devs.map(d=>Math.max(...d.map.keys())));
+  if(t1<=t0){ showErr('These files do not all overlap in time — are they the same activity?'); return; }
   const keys=[]; for(let k=t0;k<=t1;k++) keys.push(k);
   const times=keys.map(k=>new Date((k+FIT_EPOCH)*1000));
 
-  const F={};
-  for(const f of ['hr','alt','dist','cad','spd','lat','lon','temp']){
-    F['a_'+f]=interp(mA,keys,f); F['b_'+f]=interp(mB,keys,f);
-  }
-  // derive speed from distance where missing
-  for(const s of ['a','b']){
-    if(F[s+'_spd'].every(v=>v==null) && F[s+'_dist'].some(v=>v!=null)){
-      const d=F[s+'_dist']; const spd=new Array(d.length).fill(null);
-      for(let i=1;i<d.length;i++) if(d[i]!=null&&d[i-1]!=null) spd[i]=d[i]-d[i-1];
-      F[s+'_spd']=spd; F[s+'_spd_derived']=true;
+  for(const d of devs){
+    d.F={};
+    for(const f of ['hr','alt','dist','cad','spd','lat','lon']) d.F[f]=interp(d.map,keys,f);
+    if(d.F.spd.every(v=>v==null) && d.F.dist.some(v=>v!=null)){
+      const spd=new Array(keys.length).fill(null);
+      for(let i=1;i<keys.length;i++) if(d.F.dist[i]!=null&&d.F.dist[i-1]!=null) spd[i]=d.F.dist[i]-d.F.dist[i-1];
+      d.F.spd=spd; d.spdDerived=true;
     }
   }
 
   /* -------- session stat cards -------- */
-  const sA=A.session||{}, sB=B.session||{};
-  const isFoot=[1,11,17].includes(sA.sport)||[1,11,17].includes(sB.sport); // running, walking, hiking
-  const stA=sA.strides!=null?(isFoot?sA.strides*2:sA.strides):null;
-  const stB=sB.strides!=null?(isFoot?sB.strides*2:sB.strides):null;
+  const sess=devs.map(d=>d.parsed.session||{});
+  const isFoot=sess.some(s=>[1,11,17].includes(s.sport)); // running, walking, hiking
+  const steps=sess.map(s=>s.strides!=null?(isFoot?s.strides*2:s.strides):null);
+  const vline=(vals,fmt)=>devs.map((d,i)=>`<span style="color:${d.color}">${vals[i]!=null?fmt(vals[i]):'—'}</span>`).join('<br>');
+  const dline=(vals)=>{
+    const ri=devs.indexOf(refDev);
+    if(vals[ri]==null) return '';
+    const ds=devs.map((d,i)=> (d===refDev||vals[i]==null)?null:vals[i]-vals[ri]).filter(v=>v!=null);
+    if(!ds.length) return '';
+    return 'Δ'+(hasTrueRef?'ref ':' ')+ds.map(v=>(v>=0?'+':'')+ (Math.abs(v)>=100?Math.round(v).toLocaleString():(Math.round(v*100)/100))).join(' · ');
+  };
   const cards=[
-    ['Distance', sA.dist!=null?(sA.dist/1000).toFixed(2)+' km':'—', sB.dist!=null?(sB.dist/1000).toFixed(2)+' km':'—',
-      (sA.dist!=null&&sB.dist!=null)? 'Δ '+((sA.dist-sB.dist)/1000).toFixed(2)+' km':''],
-    ['Moving time', fmtDur(sA.timer), fmtDur(sB.timer), ''],
-    ['Avg HR', sA.avg_hr!=null?sA.avg_hr+' bpm':'—', sB.avg_hr!=null?sB.avg_hr+' bpm':'—',
-      (sA.avg_hr!=null&&sB.avg_hr!=null)?'Δ '+(sA.avg_hr-sB.avg_hr)+' bpm':''],
-    ['Max HR', sA.max_hr!=null?sA.max_hr+' bpm':'—', sB.max_hr!=null?sB.max_hr+' bpm':'—',
-      (sA.max_hr!=null&&sB.max_hr!=null)?'Δ '+(sA.max_hr-sB.max_hr)+' bpm':''],
-    ['Calories', sA.cal!=null?sA.cal+' kcal':'—', sB.cal!=null?sB.cal+' kcal':'—',
-      (sA.cal!=null&&sB.cal!=null)?'Δ '+(sA.cal-sB.cal)+' kcal':''],
-    [isFoot?'Steps':'Total cycles', stA!=null?stA.toLocaleString():'—', stB!=null?stB.toLocaleString():'—',
-      (stA!=null&&stB!=null)?'Δ '+(stA-stB).toLocaleString():''],
-    ['Ascent · descent', (sA.ascent!=null?sA.ascent:'—')+'·'+(sA.descent!=null?sA.descent:'—')+' m',
-      (sB.ascent!=null?sB.ascent:'—')+'·'+(sB.descent!=null?sB.descent:'—')+' m','']
+    ['Distance', sess.map(s=>s.dist), v=>(v/1000).toFixed(2)+' km'],
+    ['Moving time', sess.map(s=>s.timer), v=>fmtDur(v)],
+    ['Avg HR', sess.map(s=>s.avg_hr), v=>v+' bpm'],
+    ['Max HR', sess.map(s=>s.max_hr), v=>v+' bpm'],
+    ['Calories', sess.map(s=>s.cal), v=>v+' kcal'],
+    [isFoot?'Steps':'Total cycles', steps, v=>v.toLocaleString()],
+    ['Ascent · descent', sess.map(s=>(s.ascent!=null||s.descent!=null)?((s.ascent??'—')+'·'+(s.descent??'—')):null), v=>v+' m']
   ];
-  document.getElementById('stats').innerHTML=cards.map(c=>
-    `<div class="stat"><div class="label">${c[0]}</div><div class="vals"><span class="va">${c[1]}</span><br><span class="vb">${c[2]}</span></div><div class="d">${c[3]}</div></div>`).join('');
+  document.getElementById('stats').innerHTML=cards.map(c=>{
+    const numeric = c[1].every(v=>v==null||typeof v==='number');
+    return `<div class="stat"><div class="label">${c[0]}</div><div class="vals">${vline(c[1],c[2])}</div><div class="d">${numeric?dline(c[1]):''}</div></div>`;
+  }).join('');
 
-  /* -------- HR agreement stats -------- */
-  const pairs=[];
-  for(let i=0;i<keys.length;i++) if(F.a_hr[i]!=null&&F.b_hr[i]!=null) pairs.push([F.a_hr[i],F.b_hr[i]]);
-  if(pairs.length>10){
-    const diffs=pairs.map(p=>p[0]-p[1]);
-    const mean=a=>a.reduce((x,y)=>x+y,0)/a.length;
-    const bias=mean(diffs);
-    const mae=mean(diffs.map(Math.abs));
-    const rmse=Math.sqrt(mean(diffs.map(d=>d*d)));
-    const sd=Math.sqrt(mean(diffs.map(d=>(d-bias)**2)));
-    const ma=mean(pairs.map(p=>p[0])), mb=mean(pairs.map(p=>p[1]));
-    let num=0,da=0,db=0;
-    for(const [x,y] of pairs){num+=(x-ma)*(y-mb);da+=(x-ma)**2;db+=(y-mb)**2;}
-    const r=num/Math.sqrt(da*db);
-    const w5=diffs.filter(d=>Math.abs(d)<=5).length/diffs.length*100;
-    const w10=diffs.filter(d=>Math.abs(d)<=10).length/diffs.length*100;
+  /* -------- HR agreement: each non-ref device vs reference -------- */
+  const pairList=nonRef.map(d=>({dev:d, stats:pairStats(d.F.hr, refDev.F.hr)})).filter(p=>p.stats);
+  if(pairList.length){
     document.getElementById('agree').style.display='block';
-    document.getElementById('agreeRow').innerHTML=
-      `<div><span>Correlation</span>${r.toFixed(3)}</div>
-       <div><span>Bias (A−B)</span>${bias>=0?'+':''}${bias.toFixed(1)} bpm</div>
-       <div><span>MAE</span>${mae.toFixed(1)} bpm</div>
-       <div><span>RMSE</span>${rmse.toFixed(1)} bpm</div>
-       <div><span>Within 5 bpm</span>${w5.toFixed(0)}%</div>
-       <div><span>Within 10 bpm</span>${w10.toFixed(0)}%</div>
-       <div><span>Aligned seconds</span>${pairs.length.toLocaleString()}</div>`;
-
-    /* Bland-Altman + scatter data */
-    var baMeans=pairs.map(p=>(p[0]+p[1])/2), baDiffs=diffs, baBias=bias, baSd=sd;
+    document.getElementById('refnote').textContent = hasTrueRef?
+      `Each device compared against the reference (${refDev.name}). Positive bias = device reads higher than the reference.`:
+      `No reference loaded — ${nonRef.map(d=>d.name).join(', ')} compared against ${refDev.name}.`;
+    document.getElementById('pairs').innerHTML=pairList.map(p=>{
+      const s=p.stats;
+      return `<div class="pairrow">
+        <div class="pname"><span class="dot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${p.dev.color};margin-right:7px"></span>${p.dev.name} vs ${refDev.name}</div>
+        <div><span>r</span>${isNaN(s.r)?'—':s.r.toFixed(3)}</div>
+        <div><span>Bias</span>${s.bias>=0?'+':''}${s.bias.toFixed(1)} bpm</div>
+        <div><span>MAE</span>${s.mae.toFixed(1)} bpm</div>
+        <div><span>RMSE</span>${s.rmse.toFixed(1)} bpm</div>
+        <div><span>±LoA</span>${(1.96*s.sd).toFixed(1)} bpm</div>
+        <div><span>Within 5</span>${s.w5.toFixed(0)}%</div>
+        <div><span>Within 10</span>${s.w10.toFixed(0)}%</div>
+        <div><span>n</span>${s.n.toLocaleString()}</div>
+      </div>`;
+    }).join('');
   }
 
   document.getElementById('charts').style.display='block';
+  const trace=(d,y,extra={})=>({x:times,y,name:d.name,line:{color:d.color,width:1.2},mode:'lines',...extra});
 
-  const lineA={x:times,y:null,name:nameA,line:{color:COL.a,width:1.3},mode:'lines'};
-  const lineB={x:times,y:null,name:nameB,line:{color:COL.b,width:1.3},mode:'lines'};
-  const mk=(f)=>[{...lineA,y:F['a_'+f]},{...lineB,y:F['b_'+f]}];
+  /* HR overlay: reference drawn last (on top) */
+  Plotly.newPlot('c_hr',[...nonRef,refDev].map(d=>trace(d,d.F.hr,d===refDev&&hasTrueRef?{line:{color:d.color,width:1.6}}:{})),
+    LO({type:'date'},{title:'bpm'}),CFG);
 
-  Plotly.newPlot('c_hr',mk('hr'),LO({type:'date'},{title:'bpm'}),CFG);
-
-  const hrDiff=keys.map((_,i)=>(F.a_hr[i]!=null&&F.b_hr[i]!=null)?F.a_hr[i]-F.b_hr[i]:null);
-  Plotly.newPlot('c_hrdiff',[
-    {x:times,y:hrDiff.map(d=>d!=null&&d>=0?d:0),fill:'tozeroy',mode:'none',fillcolor:'rgba(255,122,89,.55)',name:nameA+' higher'},
-    {x:times,y:hrDiff.map(d=>d!=null&&d<0?d:0),fill:'tozeroy',mode:'none',fillcolor:'rgba(78,168,222,.55)',name:nameB+' higher'}
-  ],LO({type:'date'},{title:'Δ bpm'}),CFG);
-
-  if(typeof baMeans!=='undefined'){
-    Plotly.newPlot('c_scatter',[
-      {x:pairs.map(p=>p[1]),y:pairs.map(p=>p[0]),mode:'markers',marker:{size:3,color:COL.delta,opacity:.25},name:'aligned seconds'},
-      {x:[Math.min(...pairs.flat()),Math.max(...pairs.flat())],y:[Math.min(...pairs.flat()),Math.max(...pairs.flat())],mode:'lines',line:{dash:'dash',color:COL.muted,width:1},name:'identity'}
-    ],LO({title:nameB+' (bpm)',type:'linear'},{title:nameA+' (bpm)',type:'linear'}),CFG);
-
-    Plotly.newPlot('c_ba',[
-      {x:baMeans,y:baDiffs,mode:'markers',marker:{size:3,color:COL.muted,opacity:.25},name:'seconds'},
-      {x:[Math.min(...baMeans),Math.max(...baMeans)],y:[baBias,baBias],mode:'lines',line:{color:COL.delta,width:1.5},name:'bias'},
-      {x:[Math.min(...baMeans),Math.max(...baMeans)],y:[baBias+1.96*baSd,baBias+1.96*baSd],mode:'lines',line:{color:COL.delta,width:1,dash:'dash'},showlegend:false},
-      {x:[Math.min(...baMeans),Math.max(...baMeans)],y:[baBias-1.96*baSd,baBias-1.96*baSd],mode:'lines',line:{color:COL.delta,width:1,dash:'dash'},name:'95% LoA'}
-    ],LO({title:'mean (bpm)',type:'linear'},{title:'A − B (bpm)',type:'linear'}),CFG);
+  /* HR difference vs reference */
+  document.getElementById('t_hrdiff').textContent = hasTrueRef? 'Heart-rate error vs reference':'Heart-rate difference';
+  document.getElementById('n_hrdiff').textContent = hasTrueRef?
+    `Each device minus ${refDev.name}. Perfect tracking sits on the zero line.`:
+    `${nonRef[0].name} minus ${refDev.name}. Fill colour shows which reads higher.`;
+  if(hasTrueRef || nonRef.length>1){
+    const diffTraces=nonRef.map(d=>({x:times,
+      y:keys.map((_,i)=>(d.F.hr[i]!=null&&refDev.F.hr[i]!=null)?d.F.hr[i]-refDev.F.hr[i]:null),
+      name:d.name+' − '+refDev.name, mode:'lines', line:{color:d.color,width:1.1}}));
+    diffTraces.push({x:[times[0],times[times.length-1]],y:[0,0],mode:'lines',line:{color:COL.muted,width:.8,dash:'dot'},showlegend:false});
+    Plotly.newPlot('c_hrdiff',diffTraces,LO({type:'date'},{title:'Δ bpm'}),CFG);
+  } else {
+    const d0=nonRef[0];
+    const hrDiff=keys.map((_,i)=>(d0.F.hr[i]!=null&&refDev.F.hr[i]!=null)?d0.F.hr[i]-refDev.F.hr[i]:null);
+    Plotly.newPlot('c_hrdiff',[
+      {x:times,y:hrDiff.map(d=>d!=null&&d>=0?d:0),fill:'tozeroy',mode:'none',fillcolor:'rgba(255,122,89,.55)',name:d0.name+' higher'},
+      {x:times,y:hrDiff.map(d=>d!=null&&d<0?d:0),fill:'tozeroy',mode:'none',fillcolor:'rgba(78,168,222,.55)',name:refDev.name+' higher'}
+    ],LO({type:'date'},{title:'Δ bpm'}),CFG);
   }
 
-  /* GPS */
-  const gA=A.records.filter(r=>r.lat!=null&&r.lon!=null), gB=B.records.filter(r=>r.lat!=null&&r.lon!=null);
-  if(gA.length&&gB.length){
-    const lat0=gB[0].lat, lon0=gB[0].lon;
+  /* Scatter + Bland-Altman: one cloud per non-ref device vs reference */
+  document.getElementById('n_scatter').textContent=
+    `Each point is one aligned second, plotted against ${refDev.name}; the dashed line is perfect agreement.`;
+  if(pairList.length){
+    let lo=Infinity, hi=-Infinity;
+    for(const p of pairList){ lo=Math.min(lo,...p.stats.px,...p.stats.py); hi=Math.max(hi,...p.stats.px,...p.stats.py); }
+    const scat=pairList.map(p=>({x:p.stats.py,y:p.stats.px,mode:'markers',
+      marker:{size:3,color:p.dev.color,opacity:.22},name:p.dev.name}));
+    scat.push({x:[lo,hi],y:[lo,hi],mode:'lines',line:{dash:'dash',color:COL.muted,width:1},name:'identity'});
+    Plotly.newPlot('c_scatter',scat,
+      LO({title:refDev.name+' (bpm)',type:'linear'},{title:'device (bpm)',type:'linear'}),CFG);
+
+    const ba=[];
+    for(const p of pairList){
+      const means=p.stats.px.map((v,i)=>(v+p.stats.py[i])/2);
+      const bx=[Math.min(...means),Math.max(...means)];
+      ba.push({x:means,y:p.stats.diffs,mode:'markers',marker:{size:3,color:p.dev.color,opacity:.2},name:p.dev.name});
+      ba.push({x:bx,y:[p.stats.bias,p.stats.bias],mode:'lines',line:{color:p.dev.color,width:1.5},showlegend:false});
+      ba.push({x:bx,y:[p.stats.bias+1.96*p.stats.sd,p.stats.bias+1.96*p.stats.sd],mode:'lines',line:{color:p.dev.color,width:1,dash:'dash'},showlegend:false});
+      ba.push({x:bx,y:[p.stats.bias-1.96*p.stats.sd,p.stats.bias-1.96*p.stats.sd],mode:'lines',line:{color:p.dev.color,width:1,dash:'dash'},showlegend:false});
+    }
+    Plotly.newPlot('c_ba',ba,
+      LO({title:'mean (bpm)',type:'linear'},{title:'device − '+(hasTrueRef?'reference':refDev.name)+' (bpm)',type:'linear'}),CFG);
+  }
+
+  /* GPS: all devices that have positions */
+  const gpsDevs=devs.map(d=>({d,pts:d.parsed.records.filter(r=>r.lat!=null&&r.lon!=null)})).filter(g=>g.pts.length>10);
+  if(gpsDevs.length){
+    const o=gpsDevs[0].pts[0], lat0=o.lat, lon0=o.lon;
     const kx=111320*Math.cos(lat0*Math.PI/180), ky=110540;
     const px=r=>(r.lon-lon0)*kx, py=r=>(r.lat-lat0)*ky;
-    Plotly.newPlot('c_gps',[
-      {x:gB.map(px),y:gB.map(py),mode:'lines',name:nameB,line:{color:COL.b,width:1.5}},
-      {x:gA.map(px),y:gA.map(py),mode:'lines',name:nameA,line:{color:COL.a,width:1.5}},
-      {x:[0],y:[0],mode:'markers',marker:{color:'#5FCE8B',size:9},name:'start'}
-    ],LO({title:'m east of start',type:'linear',constrain:'domain'},{title:'m north of start',type:'linear',scaleanchor:'x',scaleratio:1,constrain:'domain'}),CFG);
+    const gt=gpsDevs.map(g=>({x:g.pts.map(px),y:g.pts.map(py),mode:'lines',name:g.d.name,line:{color:g.d.color,width:1.5}}));
+    gt.push({x:[0],y:[0],mode:'markers',marker:{color:'#E8ECF4',size:8,symbol:'circle-open'},name:'start'});
+    Plotly.newPlot('c_gps',gt,
+      LO({title:'m east of start',type:'linear',constrain:'domain'},{title:'m north of start',type:'linear',scaleanchor:'x',scaleratio:1,constrain:'domain'}),CFG);
 
-    const sep=[], sepT=[];
-    for(let i=0;i<keys.length;i++){
-      if(F.a_lat[i]!=null&&F.b_lat[i]!=null){ sep.push(hav(F.a_lat[i],F.a_lon[i],F.b_lat[i],F.b_lon[i])); sepT.push(times[i]); }
+    const gpsBase=gpsDevs.find(g=>g.d===refDev)||gpsDevs[0];
+    const others=gpsDevs.filter(g=>g!==gpsBase);
+    document.getElementById('n_gpssep').textContent=
+      `Great-circle distance between each device's position and ${gpsBase.d.name}'s at the same second.`;
+    const sepTraces=[];
+    for(const g of others){
+      const y=[],x=[];
+      for(let i=0;i<keys.length;i++){
+        if(g.d.F.lat[i]!=null&&gpsBase.d.F.lat[i]!=null){
+          y.push(hav(g.d.F.lat[i],g.d.F.lon[i],gpsBase.d.F.lat[i],gpsBase.d.F.lon[i])); x.push(times[i]);
+        }
+      }
+      const med=[...y].sort((a,b)=>a-b)[Math.floor(y.length/2)];
+      sepTraces.push({x,y,mode:'lines',line:{color:g.d.color,width:1},name:g.d.name+' (median '+(med||0).toFixed(1)+' m)'});
     }
-    const med=[...sep].sort((x,y)=>x-y)[Math.floor(sep.length/2)];
-    Plotly.newPlot('c_gpssep',[{x:sepT,y:sep,mode:'lines',line:{color:COL.delta,width:1},name:'separation (median '+(med||0).toFixed(1)+' m)'}],
-      LO({type:'date'},{title:'metres'}),CFG);
+    if(sepTraces.length) Plotly.newPlot('c_gpssep',sepTraces,LO({type:'date'},{title:'metres'}),CFG);
+    else document.getElementById('c_gpssep').parentElement.style.display='none';
+  } else {
+    document.getElementById('c_gps').parentElement.parentElement.style.display='none';
   }
 
-  Plotly.newPlot('c_alt',mk('alt'),LO({type:'date'},{title:'m'}),CFG);
-  Plotly.newPlot('c_dist',[{...lineA,y:F.a_dist.map(v=>v!=null?v/1000:null)},{...lineB,y:F.b_dist.map(v=>v!=null?v/1000:null)}],
-    LO({type:'date'},{title:'km'}),CFG);
-  Plotly.newPlot('c_cad',[{...lineA,y:rolling(F.a_cad,30)},{...lineB,y:rolling(F.b_cad,30)}],
-    LO({type:'date'},{title:'spm / rpm'}),CFG);
-  Plotly.newPlot('c_spd',[
-    {...lineA,y:rolling(F.a_spd,30).map(v=>v!=null?v*3.6:null),name:nameA+(F.a_spd_derived?' (derived)':'')},
-    {...lineB,y:rolling(F.b_spd,30).map(v=>v!=null?v*3.6:null),name:nameB+(F.b_spd_derived?' (derived)':'')}],
-    LO({type:'date'},{title:'km/h'}),CFG);
+  /* remaining channel overlays; hide cards where no device has data */
+  const chan=(id,f,ya,xform=v=>v,smooth=0)=>{
+    const have=devs.filter(d=>d.F[f].some(v=>v!=null));
+    const card=document.getElementById(id).parentElement;
+    if(!have.length){ card.style.display='none'; return; }
+    card.style.display='';
+    Plotly.newPlot(id,have.map(d=>trace(d,(smooth?rolling(d.F[f],smooth):d.F[f]).map(v=>v!=null?xform(v):null),
+      d.spdDerived&&f==='spd'?{name:d.name+' (derived)'}:{})),LO({type:'date'},{title:ya}),CFG);
+  };
+  chan('c_alt','alt','m');
+  chan('c_dist','dist','km',v=>v/1000);
+  chan('c_cad','cad','spm / rpm',v=>v,30);
+  chan('c_spd','spd','km/h',v=>v*3.6,30);
 }
-</script>
-</body>
-</html>
